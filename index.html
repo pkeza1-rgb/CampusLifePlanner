@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Campus Life Planner helps students record and organise tasks, events and study sessions.">
+        <title>Campus Life Planner | Campus Life made easier with Campus Life Planner</title>
+        <link rel="stylesheet" href="styles/style.css">
+        <script src="scripts/main.js" defer></script>
+    </head>
+    <body>
+        <a href="#main-content" class="skip-link"> Skip to main content</a>
+        <header>
+            <h1> Campus Life Planner</h1>
+            <p>Organise your campus life in one place.</p>
+            <nav>
+                <a href="#dashboard">Dashboard</a>
+                <a href="#activities">Activities</a>
+                <a href="#settings">Settings</a>
+                <a href="#about">About Us</a>
+            </nav>
+        </header>
+        <main id="main-content">
+            <section id="dashboard">
+                <h2> My Dashboard</h2>
+                <div class="dashboard">
+                    <article>
+                        <h3>All Activities</h3>
+                        <p id="total-activities">0</p>
+                    </article>
+                    <article>
+                        <h3>Duration</h3>
+                        <p id="total-duration">0 minutes</p>
+                    </article>
+                    <article>
+                        <h3>Tag</h3>
+                        <p id="top-tag">None</p>
+                    </article>
+                    <article>
+                        <h3> Last 7 days</h3>
+                        <p id="week-total">0 Activities</p>
+                    </article>
+                </div>
+                <h3>Activity Trend</h3>
+                <div id="weekly-chart" class="weekly-chart"></div>
+                <p id="message" role="status">Please set your target duration in Settings.</p>
+            </section>
+            <section id="activities">
+                <h2>My Activities</h2>
+                <label for="search">Search activities using regular expressions</label>
+                <input type="search" id="search" placeholder="Example: Study|Exam">
+                <label for="ignore-case">
+                    <input type="checkbox" id="ignore-case" checked>
+                    Ignore uppercase and lowercase differences
+                </label>
+                <p id="search-message" role="status"></p>
+                <label for="sort">Sort Activities</label>
+                <select id="sort">
+                    <option value="dueDate">Due Date</option>
+                    <option value="title">Title</option>
+                    <option value="duration">Duration</option>
+                </select>
+                <button type="button" id="sort-order">Change Sorting Order
+                </button>
+                <h3>Activity List</h3>
+                <div id="activity-list">
+                    <p>No activities yet. Add your very first activity below.</p>
+                </div>
+            </section>
+            <section id="form-section">
+                <h2 id="form-heading">Add an Activity</h2>
+                <form id="activity-form">
+                    <input type="hidden" id="activity-id">
+                    <label for="title">Activity Name</label>
+                    <input type="text" id="title" required>
+                    <p id="title-error" class="error"></p>
+                    <label for="due-date">Due Date</label>
+                    <input type="date" id="due-date" required>
+                    <p id="date-error" class="error"></p>
+                    <label for="duration">Duration in minutes</label>
+                    <input type="number" id="duration" min="0" step="0.01" required>
+                    <p id="duration-error" class="error"></p>
+                    <label for="tag">Tag</label>
+                    <input type="text" id="tag" required>
+                    <p id="tag-error" class="error"></p>
+                    <button type="submit" id="save-button">Add Activity</button>
+                    <button type="reset">Clear Form</button>
+                    <p id="form-message" role="status"></p>
+                </form>
+            </section>
+            <section id="settings">
+                <h2>Settings</h2>
+                <label for="target">Target Duration in Minutes</label>
+                <input type="number" id="target" min="0" value="600">
+                <button type="button" id="save-target">Save Target</button>
+                <h3>Convert Minutes to Hours</h3>
+                <label for="minutes">Minutes</label>
+                <input type="number" id="minutes" min="0" value="60">
+                <button type="button" id="convert">Convert</button>
+                <p id="result" role="status"></p>
+                <h3>Export Activities</h3>
+                <button type="button" id="export">Export JSON</button>
+                <h3>Import Activities</h3>
+                <label for="import-file">Choose a JSON file</label>
+                <input type="file" id="import-file" accept=".json">
+                <button type="button" id="import">Import JSON</button>
+                <p id="import-message" role="status"></p>
+            </section>
+            <section id="about">
+                <h2>About Campus Life Planner</h2>
+                <p>Campus Life Planner helps students to organise assignments, campus events, and study sessions.</p>
+                <p>Github: <a href="https://github.com/pkeza1-rgb">My Github Profile</a></p>
+                <p>Email: <a href="mailto:p.keza1@alustudent.com">Contact me</a></p>
+            </section>
+         </main>
+         <footer>
+            <p>&copy; 2026 CampusLifePlanner</p>
+            <a href="#main-content">Back to Top</a>
+         </footer>
+    </body>
+</html>
