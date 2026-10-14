@@ -17,6 +17,106 @@ let editingId=null;
 let search_pattern=null;
 let target_minutes=loadTarget();
 let settings=loadSettings();
+// Loading and saving activities to local storage
+function load_activities(){
+    try{
+        const saved_data= localStorage.getItem(storage_key);
+        if(!saved_data){
+            return [];
+        }
+        const parsed_data= JSON.parse(saved_data);
+        if(!Array.isArray(parsed_data)){
+            return[];
+        }
+        return parsed_data.filter(function(item){
+            return item &&
+            typeof item.id === "string" &&
+            typeof item.title === "string" &&
+            typeof item.dueDate === "string" &&
+            Number.isInteger(Number(item.duration)) &&
+            typeof item.tag === "string";
+        });
+        map(function(item){
+            return{
+                id: item.id,
+                title: item.title,
+                dueDate: item.dueDate,
+                duration: Number(item.duration),
+                tag: item.tag
+            };
+
+        });
+    }
+    catch (error){
+        console.error("Can't load activities:", error);
+    return [];
+    }
+}
+function save_activities(){
+    try{
+        localStorage.setItem(storage_key, JSON.stringify(activities));
+        return true;
+    }
+    catch(error){
+        show_message("form-message", "Failed to save activities. Check your browser storage.");
+        return false;
+    }
+}
+function loadTarget(){
+    try{
+        const saved_data= Number(localStorage.getItem(target_key));
+        return Number.isInteger(saved_data) && saved_data > 0 && saved_data <= 10080 ? saved_data : 600;
+    }
+    catch(error){
+        return 600;
+    }
+}
+function loadSettings(){
+    const defaults= {unit: "minutes", cap:1000};
+    try{
+        const saved_data= JSON.parse(localStorage.getItem(settings_key));
+        if(!saved_data || typeof saved_data !== "object"){
+            return defaults;
+        }
+        return{
+            unit: saved_data.unit === "hours" ? "hours" : "minutes",
+            cap: Number.isFinite(Number(saved_data.cap)) && Number(saved_data.cap)> 0 ? Number(saved_data.cap): defaults.cap
+        };
+    }
+    catch(error){
+        return defaults;
+    }
+}
+function saveTarget(){
+    try{
+        localStorage.setItem(target_key, String(target_minutes));
+        return true;
+    }
+    catch(error){
+        show_message("result", "Could not save the weekly target.");
+        return false;
+    }
+}
+function saveSettings(){
+    try{
+        localStorage.setItem(settings_key, JSON.stringify(settings));
+        return true;
+    }
+    catch(error){
+        show_message("result", "Could not save your settings.");
+        return false;
+    }
+}
+function get_value(id){
+    const element =document.getElementById(id);
+    return element ? element.value.trim() : "";
+}
+function show_message(id, message){
+    const element= document.getElementById(id);
+    if(element){
+        element.textContent = message;
+    }
+}
 // Validation and advanced regex
 function validate(title, date, duration, tag){
     if (
@@ -345,4 +445,123 @@ if (activity){
         },0);
         return current_total + item.duration > Number(settings.cap);
     }
+// Settings and duration units
+function format_duration(minutes){
+    if(settings.unit === "hours"){
+        const hours = (minutes / 60).toFixed(2);
+        return hours + "hours";
+    }
+    return minutes + "minutes";
+}
+const save_target_button= document.getElementById("save-target");
+if (save_target_button){
+    save_target_button.addEventListener("click", function(){
+        const new_target = Number(get_value("target"));
+        const cap_field = document.getElementById("weekly-cap");
+        const new_cap = cap_field ? Number(cap_field.value): Number(settings.cap);
+        if(!Number.isInteger(new_target)|| new_target < 1 || new_target > 10080){
+            show_message("resulst", "Weekly target must be from 1 to 10080 minutes.");
+            return;
+        }
+        const old_target = target_minutes;
+        const old_cap = settings.cap;
+        target_minutes = new_target;
+        settings.cap = new_cap;
+        if (!saveTarget() || !saveSettings()){
+            target_minutes = old_target;
+            settings.cap = old_cap;
+            return;
+        }
+        show_message("result", "Weekly target and cap saved successfully.");
+        updateDashboard();
+    });
+}
+const unit_select = document.getElementById("duration-unit");
+if(unit_select){
+    unit_select.value = settings.unit;
+    unit_select.addEventListener("change", function(){
+        settings.unit = unit_select.value === "hours"? "hours" : "minutes";
+        if(saveSettings()){
+            renderActivities();
+            show_message("result", "Duration display prefereces saved.");
+        }
+    });
+    if (convert_button){
+        convert_button.addEventListener("click", function(){
+            const raw_minutes = get_value("minutes");
+            const minutes = Number(raw_minutes);
+            if(raw_minutes === ""|| !Number.isFinite(minutes)|| minutes <0){
+                show_message("result", "Enter a valid number of minutes");
+                return;
+            }
+            show_message("result", format_duration(minutes));
+        });
+    }
+    const export_button = document.getElementById("export");
+    if(export_button){
+        export_button.addEventListener("click", function(){
+            const export_data ={ apllication: "Campus Life Planner", version:1, activities: activities};
+            const file= new Blob([JSON.stringify(export_data, null, 2)],{type: "application/json"});
+            const file_url = URL.createObjectURL(file);
+            const link = document.createElement("a");
+            link.href = file_url;
+            link.download= "campus-life-planner.json";
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+            URL.revokeObjectURL(file_url);
+            show_message("import-message", "Activities exported successfully!");
+        });
+    }
+    const import_button = document.getElementById("import");
+    const import_file = document.getElementById("import-file");
+    function validate_imported_activity(item){
+        if(!item || typeof item.title !== "string"|| typeof item.dueDate !== "string"|| typeof item.tag !== "string"){
+            return false;
+        }
+        return validate(item.title, item.dueDate, String(item.duration), item.tag) === "";
+    }
+    if(import_button && import_file){
+        import_button.addEventListener("click", async function(){
+            const file = import_file.files[0];
+            if(!file){
+                show_message("import-message", "Choose a JSON file first.");
+                return;
+            }
+            try{
+                const file_text = await file.text();
+                const parsed_data= JSON.parse(file_text);
+                const imported_items = Array.isArray(parsed_data) ? parsed_data : parsed_data && parsed_data.activities;
+                if(!Array.isArray(imported_items) || imported_items.length > 1000){
+                    throw new Error("The file must not exceed 1000 records!");
+                }
+                if (!imported_items.every(validate_imported_activity)){
+                    throw new Error("Failed to import! The file contains invalid activities.");
+                }
+                const previous = activities;
+                activities = imported_items.map(function(item){
+                    return{
+                        id: Date.now().toString() + Math.random().toString(16).slice(2),
+                        title: item.title.trim(),
+                        dueDate: item.dueDate,
+                        duration: Number(item.duartion),
+                        tag: item.tag.trim()
+                    };
+                });
+                if(!save_activities()){
+                    activities = previous;
+                    renderActivities();
+                    return;
+                }
+                resetActivityForm();
+                renderActivities();
+                import_file.value ="";
+                show_message("import-message", activities.length + "activities imported successfully.");
+            }
+            catch(error){
+                show_message("import-message", "Failed to import: " + error.message);
+            }
+        });
+    }
+}
 
