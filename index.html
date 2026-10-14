@@ -21,7 +21,7 @@
             </nav>
         </header>
         <main id="main-content">
-            <section id="dashboard">
+            <section id="dashboard" class="app-view is-active">
                 <h2> My Dashboard</h2>
                 <div class="dashboard">
                     <article>
@@ -37,15 +37,17 @@
                         <p id="top-tag">None</p>
                     </article>
                     <article>
-                        <h3> Last 7 days</h3>
+                        <h3> Current Week Duration</h3>
                         <p id="week-total">0 Activities</p>
                     </article>
                 </div>
                 <h3>Activity Trend</h3>
-                <div id="weekly-chart" class="weekly-chart"></div>
+                <div id="weekly-chart" class="weekly-chart">
+                <div id="weekly-chart-bar"></div>
+                </div>
                 <p id="message" role="status">Please set your target duration in Settings.</p>
             </section>
-            <section id="activities">
+            <section id="activities" class="app-view">
                 <h2>My Activities</h2>
                 <label for="search">Search activities using regular expressions</label>
                 <input type="search" id="search" placeholder="Example: Study|Exam">
@@ -67,7 +69,7 @@
                     <p>No activities yet. Add your very first activity below.</p>
                 </div>
             </section>
-            <section id="form-section">
+            <section id="form-section" class="app-view">
                 <h2 id="form-heading">Add an Activity</h2>
                 <form id="activity-form">
                     <input type="hidden" id="activity-id">
@@ -78,7 +80,7 @@
                     <input type="date" id="due-date" required>
                     <p id="date-error" class="error"></p>
                     <label for="duration">Duration in minutes</label>
-                    <input type="number" id="duration" min="0" step="0.01" required>
+                    <input type="number" id="duration" min="5" max="720" step="1" required>
                     <p id="duration-error" class="error"></p>
                     <label for="tag">Tag</label>
                     <input type="text" id="tag" required>
@@ -88,11 +90,18 @@
                     <p id="form-message" role="status"></p>
                 </form>
             </section>
-            <section id="settings">
+            <section id="settings" class="app-view">
                 <h2>Settings</h2>
                 <label for="target">Target Duration in Minutes</label>
                 <input type="number" id="target" min="0" value="600">
-                <button type="button" id="save-target">Save Target</button>
+                <label for="weekly-cap">Weekly Cap Duration in minutes</label>
+                <input type="number" id="weekly-cap" min="1" value="1000">
+                <label for="duration-unit">Display duration in</label>
+                <select id="duration-unit">
+                    <option value="minutes">Hours and Minutes</option>
+                    <option value="hours">Decimal Hours</option>           
+                </select>
+                <button id="save-target" type="button">Save Target</button>
                 <h3>Convert Minutes to Hours</h3>
                 <label for="minutes">Minutes</label>
                 <input type="number" id="minutes" min="0" value="60">
@@ -106,9 +115,9 @@
                 <button type="button" id="import">Import JSON</button>
                 <p id="import-message" role="status"></p>
             </section>
-            <section id="about">
+            <section id="about" class="app-view">
                 <h2>About Campus Life Planner</h2>
-                <p>Campus Life Planner helps students to organise assignments, campus events, and study sessions.</p>
+                <p>Campus Life Planner is a web application that helps students to organise assignments, campus events, and study sessions.<br> For more information, visit my github or write an email as provided below.</p>
                 <p>Github: <a href="https://github.com/pkeza1-rgb">My Github Profile</a></p>
                 <p>Email: <a href="mailto:p.keza1@alustudent.com">Contact me</a></p>
             </section>
