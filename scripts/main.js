@@ -563,5 +563,24 @@ if(unit_select){
             }
         });
     }
+    //Accessibility audit
+    if(find){
+        find.addEventListener("input", renderActivities);
+    }
+    if(casey){
+        casey.addEventListener("change", renderActivities);
+    }
+    if(sorta){
+        sorta.addEventListener("change", renderActivities);
+    }
+    if(ordie){
+        ordie.textContent = "Sort: Ascending";
+        ordie.addEventListener("click", function(){
+            sort_asc =!sort_asc;
+            ordie.textContent= sort_asc ? "Sort: Ascending" : "Sort: Descending";
+            renderActivities();
+        });
+    }
+    renderActivities();
 }
 
