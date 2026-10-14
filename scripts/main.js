@@ -58,3 +58,211 @@ function format_duration(minutes){
     return '${hours} hr ${remainder} min';
 
 }
+// Regex search, sorting and highlights
+function compile_search(query){
+    if (!query){
+        return null;
+    }
+    try{
+        const flags=casey && casey.checked? "gi" : "g";
+        return new RegExp(query, flags);
+    }
+    catch(error){
+        return false;
+    }
+}
+function get_visible_activities(){
+    let visible=[...activities];
+    const query=find? find.value.trim(): "";
+    search_pattern=compile_search(query);
+    if(search_pattern === false){
+        show_message("search-message", "Invalid regular expression, please correct your search!");
+         return null;
+    }
+   if(search_pattern){
+    visible=visible.filter(function(item){
+        search_pattern.lastIndex=0;
+        return search_pattern.test(item.title + " " + item.tag);
+    });
+    show_message("search-message", visible.length + "matching activities found.");
+   }
+   else{
+    show_message("search-message", "");
+   }
+   const sort_by=sorta? sorta.value : "dueDate";
+   visible.sort(function(a,b){
+    let result=0;
+    if(sort_by === "title"){
+        result= a.title.localeCompare(b.title);
+    }
+    else if(sort_by ==="duration"){
+        result= a.duration - b.duration;
+    }
+    else{
+        result= a.dueDate.localeCompare(b.dueDate);
+    }
+    return sort_asc? result:-result;
+   });
+   return visible;
+}
+function add_highlight(parent, text, query){
+    if(!query){
+        parent.textContent= text;
+        return ;
+    }
+    const pattern= compile_search(query);
+    if(!pattern){
+        parent.textContent= text;
+        return;
+    }
+    let last_index=0;
+    let match;
+    while((match=pattern.exec(text)) !==null){
+        parent.appendChild( document.createTextNode(text.slice(last_index, match.index)));
+        const mark=document.createElement("mark");
+        mark.textContent=match[0];
+        parent.appendChild(mark);
+        last_index=match.index + match[0].length;
+        if(match[0].length ===0){
+            pattern.lastIndex++;
+        }
+    }
+    parent.appendChild(document.createTextNode(text.slice(lsat_index)));
+}
+// Rendering activities, edit and delete buttons
+function renderActivities(){
+    if(!listy){
+        return;
+    }
+    listy.replaceChildren();
+    const visible=get_visible_activities();
+    if(visible ===null){
+        listy.textContent="To view results, correct the search pattern.";
+        updateDashboard();
+        return;
+    }
+    if(visible.length ==0){
+        listy.textContent=activities.length ===0? "No activities yet. Add your first acticity." : "No activities match your search!";
+        updateDashboard();
+        return;
+    }
+    const query=find? find.value.trim():"";
+    visible.forEach(function(item){
+        const card=document.createElement("article");
+        card.className="activity-card";
+        const heading=document.createElement("h3");
+        add_highlight(heading, item.title, query);
+        const date=document.createElement("p");
+        date.textContent="Due date:" + item.dueDate;
+        const duration=document.createElement("p");
+        duration.textContent="Duration:" + format_duration(item.duartion);
+        const tag= document.createElement("p");
+        tag.textContent="Tag:" + item.tag;
+        const edit_button=document.createElement("button");
+        edit_button.type="button";
+        edit_button.textContent="Edit";
+        edit_button.setAttribute("aria-label", "Edit activity:" + item.title);
+        edit_button.addEventListener("click", function(){
+            editActivity(item.id);
+        });
+        const delete_button=document.createElement("button");
+        delete_button.type="button";
+        delete_button.textContent="Delete";
+        delete_button.setAttribute("aria-label", "Delete activity:" + item.title);
+        delete_button.addEventListener("click", function(){
+            deleteActivity(item.id);
+        });
+        card.append(heading, date, duration, tag, edit_button, delete_button);
+        listy.appendChild(card);
+    });
+    updateDashboard();
+}
+// Adding, editing and deleting activities
+function resetActivityForm(){
+    if(activity){
+        activity.reset();
+    }
+    editingId=null;
+    const id_field=document.getElementById("activity-id");
+    if (id_field){
+        id_field.value="";
+    }
+    show_message("form-heading", "Add an activity");
+    show_message("save-button", "Add activity");
+}
+function editActivity(id){
+    const item= activities.find(function(entry){
+        return entry.id ===id;
+    });
+    if(!item || !activity){
+        return;
+    }
+    editingId= id;
+    document.getElementById("title").value= item.title;
+    document.getElementById("due-date").value= item.dueDate;
+    document.getElementById("duartion").value= item.duration;
+    document.getElementById("tag").value= item.tag;
+    const id_field= document.getElementById("activity-id");
+    if (id_field){
+        id_field.value= id;
+    }
+    show_message("form-geading", "Edit an activity");
+    show_message("save-button", "Save changes");
+    document.getElementById("title").focus();
+}
+function deleteActivity(id){
+    const item= activities.find(function(entry){
+        return entry=== id;
+    });
+    if(!item || window.confirm("Delete" + item.tilte + "?")){
+        return;
+    }
+    const previous=activities;
+    activities= activities.filter(function(entry){
+        return entry.id !== id;
+    });
+    if(!save_activities()){
+        activities=previous;
+        return;
+    }
+    if (editingId === id){
+        resetActivityForm();
+    }
+    show_message("form-message", "Activity deleted successfully!");
+    renderActivities();
+}
+if (activity){
+    activity.addEventListener("submit", function(event){
+        event.preventDefault();
+        const title= get_value("title");
+        const date= get_value("due-date");
+        const duration= get_value("duration");
+        const tag= get_value("tag");
+        const error = validate(title, date, duration, tag);
+        if(error){
+            show_message("form-message", error);
+            return;
+        }
+        const item={
+            id: editingId ||(Date.now().toString + Math.random().toString(16).slice(2)), title: title, dueDate: date, duration: Number(duration), tag: tag};
+            if (exceeds_weekly_cap(item)){
+                show_message("form-message", "The activity exceeds your weekly cap.");
+                return;
+            }
+            const previous=[...activities];
+            if(editingId){
+                activities= activities.map(function(old_item){
+                    return old_item.id === editingId ? item: old_item;
+                });
+            }
+            else{
+                activities.push(item);
+            }
+            if(!save_activities()){
+                activities= previous;
+                return;
+            }
+            resetActivityForm();
+            show_message("form-message", "Activity saved successfylly saved!");
+        });
+    }
