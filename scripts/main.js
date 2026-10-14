@@ -266,3 +266,83 @@ if (activity){
             show_message("form-message", "Activity saved successfylly saved!");
         });
     }
+    // Weekly target and cap
+    function get_week_start(date){
+        const start= new Date( date.getFullYear(), date.getMonth(), date.getDate());
+        const days_since_monday=(start.getDay() +6)%7;
+        start.setDate(start.getDate() - days_since_monday);
+        start.setHours(0, 0, 0, 0);
+        return start;
+    }
+    function updateDashboard(){
+        const total_duration= activities.reduce(function(total, item){
+            return total + item.duration;
+        }, 0);
+        const tag_counts={};
+        activities.forEach(function(item){
+            tag_counts[item.tag]= (tag_counts[item.tag] || 0) +1;     
+        });
+        let top_tag="None yet";
+        let highest_count=0;
+        Object.keys(tag_counts).forEach(function(tag){
+            if (tag_counts[tag] > highest_count){
+                top_tag= tag;
+                highest_count = tag_counts[tag];
+            }
+        });
+        const week_start= get_week_start(new Date());
+        const next_week= new Date(week_start);
+        next_week.setDate(next_week.getDate() +7);
+        const week_total= activities.reduce(function(total, item){
+            const due_date= new Date(item.dueDate + "T00:00:00");
+            return due_date >= week_start && due_date < next_week ? + item.duration : total;
+        },0);
+        show_message ("top-tag", top_tag);
+        show_message("week_total", format_duration(week_total));
+        const cap= Number(settings.cap);
+        let status = "You are within your weekly target. Good work!";
+        if (week_total > cap){
+            status= "warning!! Your weekly cap has been exceeded.";
+        }
+        else if(week_total > target_minutes){
+            status= "Your weekly target has been exceeded.";
+        }
+        show_message("message", status);
+        const chart= document.getElementById("weekly-chart");
+        if (chart){
+            const percent= Math.min(100, (week_total/ target_minutes)*100);
+            chart.style.width= percent + "%";
+            chart.setAttribute("role", "progress bar");
+            chart.setAttribute("aria-valuemin", "0");
+            chart.setAttribute("aria-valuemax", "100");
+            chart.setAttribute("aria-valuenow", String(Math.round(percent)));
+            chart.setAttribute("aria-label", "Weekly planned minutes compared with target");
+        }
+        const target_input = document.getElementById("target");
+        if(target_input && document.activeElement !== target_input){
+            target_input.value= String(target_minutes);
+        }
+        const sap_input= document.getElementById("weekly0cap");
+        if(cap_input && document.activeElement !== cap_input){
+            cap_input.value= String(settings.cap);
+        }
+
+    }
+    function exceeds_weekly_cap(item){
+        const start= get_week_start( new Date());
+        const end= new Date(start);
+        end.setDate(end.getDate() +7);
+        const due_date = new Date(item.dueDate + "T00:00:00");
+        if(due_date < start || due_date >= end){
+            return false;
+        }
+        const current_total = activities.reduce(function(total, old_item){
+            const old_date = new Date(old_item.dueDate + "T00:00:00");
+            if(old_item.id !== editingId && old_date >= start && old_date < end){
+                return total + old_item.duration;
+            }
+            return total;
+        },0);
+        return current_total + item.duration > Number(settings.cap);
+    }
+
