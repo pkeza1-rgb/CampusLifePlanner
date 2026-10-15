@@ -509,9 +509,10 @@ if (save_target_button){
         const cap_field = document.getElementById("weekly-cap");
         const new_cap = cap_field ? Number(cap_field.value): Number(settings.cap);
         if(!Number.isInteger(new_cap) || new_cap < 1 || new_cap>1000){
-            show_message("result", "Weekly cap must be a positive number between 1 and 1000.");
+            show_message("cap-error", "Weekly cap must be a positive number between 1 and 1000.");
             return;
         }
+        show_message("cap-error", "");
         if(!Number.isInteger(new_target)|| new_target < 1 || new_target > 10080){
             show_message("result", "Weekly target must be from 1 to 10080 minutes.");
             return;
