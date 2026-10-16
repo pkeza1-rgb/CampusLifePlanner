@@ -37,7 +37,7 @@ Each record will contain the following fields:
 
 The Campus Life Planner will contain the following main sections:
 
-### About
+### About us
 
 This section will briefly explain the purpose of the Campus Life
 Planner and how students can use it.
@@ -48,11 +48,11 @@ This section will display useful information about the user's
 activities, including the total number of records, total duration,
 most common tag, and activity trends.
 
-### Records
+### Activities
 
 This section will display the student's activities in a table or
 card-based layout. Users will be able to sort, search, edit, and delete
-records.
+activities.
 
 ### Add / Edit Form
 
