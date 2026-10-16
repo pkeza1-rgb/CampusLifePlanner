@@ -59,7 +59,7 @@ Campus Life Planner demonstrates the use of HTML, CSS, and JavaScript to build a
 
 **Developer:** Paradis Ange Keza
 
-**Repository:** []
+**Repository:** [https://github.com/pkeza1-rgb/CampusLifePlanner]
 
 **Live Application:** [Add your GitHub Pages URL, if deployed]
 
