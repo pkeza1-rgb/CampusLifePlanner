@@ -40,21 +40,26 @@ Activities and preferences are stored in the browser's local storage. Export you
 
 ```text
 CampusLifePlanner/
-├── index.html
-├── styles/
-│   └── style.css
+├── reports/
+│   └── AI_Usage_report
 ├── scripts/
 │   └── main.js
-└── README.md
+├── styles/
+│   └── style.css
+├── M1_SPEC.md
+├── README.md
+├── index.html
+├── seed.json
+└── tests.html
 ```
 
 ## Project Goal
 
 Campus Life Planner demonstrates the use of HTML, CSS, and JavaScript to build a practical, responsive, and accessible student productivity application.
 
-**Developer:** Paradis Keza
+**Developer:** Paradis Ange Keza
 
-**Repository:** [Add your GitHub repository URL]
+**Repository:** []
 
 **Live Application:** [Add your GitHub Pages URL, if deployed]
 
