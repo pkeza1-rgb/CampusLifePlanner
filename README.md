@@ -58,7 +58,7 @@ CampusLifePlanner/
 Campus Life Planner demonstrates the use of HTML, CSS, and JavaScript to build a practical, responsive, and accessible student productivity application.
 ## How to run tests
 
-To run tests, open the tests.html where you will find a list of features and instructions on how to verify their functionality. The "Click to go to Campus Life Planner" will take you directly to the website where you can run the tests then come back to check=off tests from the checklist. Check the box only if the specific test was successful.
+To run tests, open the tests.html where you will find a list of features and instructions on how to verify their functionality. The "Click to go to Campus Life Planner" will take you directly to the website where you can run the tests then come back to check-off tests from the checklist. Check the box only if the specific test was successful.
 
 **Developer:** Paradis Ange Keza
 
