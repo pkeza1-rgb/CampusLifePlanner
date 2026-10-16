@@ -29,7 +29,6 @@ Campus Life Planner is a responsive web application designed to help students or
 2. Open the project folder in Visual Studio Code.
 3. Open `index.html` in a browser, or run it using the VS Code Live Server extension.
 4. Start adding and organising your activities.
-   Here is the link to demo video on how to proceed:
 
 No backend server or database is required for the application's local browser functionality.
 
@@ -66,4 +65,5 @@ To run tests, open the tests.html where you will find a list of features and ins
 **Repository:** [https://github.com/pkeza1-rgb/CampusLifePlanner]
 
 **Live Application:** [https://pkeza1-rgb.github.io/CampusLifePlanner/]
+**Demo Video:** [https://youtu.be/FHUrzhLfjvs]
 
