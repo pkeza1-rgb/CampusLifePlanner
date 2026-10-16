@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Manual testing checklist for Campus Life Planner">
+        <title>Campus Life Planner | Tests</title>
+        <link rel="stylesheet" href="styles/style.css">
+        <style>
+            .test-section{
+                margin: 24px 0;
+                padding: 20px;
+                border: 1px solid #374151;
+                border-radius: 12px;
+            }
+            .test-item{
+                display: flex;
+                align-items: flex-start;
+                gap: 12px;
+                margin: 14px 0;
+            }
+            .test-item input{
+                margin-top: 5px;
+                accent-color: #2DD48F;
+            }
+            .test-item label{
+                cursor: pointer;
+            }
+            .test-note{
+                color: #9CA3AF;
+                font-size: 0.9rem;
+            }
+        </style>
+    </head>
+    <body>
+        <a class="skip-link" href="#main-content">Skip to tests</a>
+        <header>
+            <h1>Campus Life Planner</h1>
+            <p>Manual Testing Checklist</p>
+            <nav aria-label="Main navigation">
+                <a href="index.html">Click to go to Campus Life Planner</a>
+            </nav>
+        </header>
+        <main id="main-content">
+            <section>
+                <h2>Application Test Checklist</h2>
+                <p>Use this checklist to verify if the application's features work properly.<br>Open the planner in another tab and perform each test.<br>Please check an item from the list only after confirming that it works perfectly!</p>
+                <p id="test-progress" role="status" aria-live="polite">0 tests completed.</p>
+            </section>
+            <section class="test-section">
+                <h2>1.Activity Management</h2>
+                <div class="test-item">
+                    <input type="checkbox" id="test-add">
+                    <label for="test-add">Add an activity with valid details.
+                        <span class="test-note">Expected: the activity appears in the activity lis.</span>
+                    </label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="test-edit">
+                    <label for="test-edit">Edit an existing activity.
+                        <span class="test-note">Expected: the changes appear in the activity list.</span>
+                    </label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="test-delete">
+                    <label for="test-delete">Delete an activity.
+                        <span class="test-note">Expected: the activity is removed from the activity list after confirmation.</span>
+                    </label>
+                </div>
+            </section>
+            <section class="test-section">
+                <h2>2.Input Validation</h2>
+                <div class="test-item">
+                    <input type="checkbox" id="test-title">
+                    <label for="test-title">Enter a title with a repeated word(Eg:Study study session)
+                        <span class="test-note">Expected: the title will be rejected.</span>
+                    </label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="test-duration">
+                    <label for="test-duration">Enter a duration below 5 or above 720.
+                        <span slass="test-note">Expected: duration will be rejected.</span>
+                    </label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="test-tag">
+                    <label for="test-tag">Enter a tag that begins with a number.
+                        <span class="tset-note">Expected: tag will be rejected.</span>
+                    </label>
+                </div>
+            </section>
+            <section class="test-section">
+                <h2>3.Search and Sorting</h2>
+                <div class="test-item">
+                    <input type="checkbox" id="test-search">
+                    <label for="test-search">Search for a word found in an activity title or tag.
+                        <span class="test-note">Expected:Matching activities will appear</span>
+                    </label>
+                </div>
+                <div class="test-item">
+                <input type="checkbox" id="test-regex">
+                <label for="test-regex">
+                    Enter an invalid regex pattern, such as "[".
+                    <span class="test-note">Expected: an error appears without crashing the application.</span>
+                </label>
+            </div>
+            <div class="test-item">
+                <input type="checkbox" id="test-sort">
+                <label for="test-sort">
+                    Sort activities by title, due date, and duration.
+                    <span class="test-note">Expected: activities appear in the selected order.</span>
+                </label>
+            </div>
+            </section>
+            <section class="test-section">
+                <h2>4.Dashboard and Preferences</h2>
+                <div class="test-item">
+                <input type="checkbox" id="test-dashboard">
+                <label for="test-dashboard">
+                    Add or remove an activity and inspect the dashboard.
+                    <span class="test-note">Expected: activity statistics update.</span>
+                </label>
+            </div>
+            <div class="test-item">
+                <input type="checkbox" id="test-target">
+                <label for="test-target">Change and save the weekly target.
+                    <span class="test-note">Expected: the saved target is reflected int the dashboard.</span>
+                </label>
+            </div>
+            <div class="test-item">
+                <input type="checkbox" id="test-storage"> 
+                <label for="test-storage">Refresh after saving activities and preferences.
+                    <span class="test-note">Expected: saved data remains available.</span>
+                </label>           
+            </div>
+            </section>
+            <section class="test-section">
+                <h2>5.Import and Export JSON</h2>
+                <div class="test-item">
+                    <input type="checkbox" id="test-export">
+                    <label for="test-export">Export activities.
+                        <span class="test-note">Expected: a JSON file is downloaded.</span>
+                    </label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="test-import">
+                    <label for="test-input">Import a valid JSON file.
+                        <span class="test-note">Expected: the activity is added.</span>
+                    </label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="test-invalid-import">
+                    <label for="test-invalid-import">Import an invalid JSON file.
+                        <span class="test-note">Expected: an error message appears.</span>
+                    </label>
+                </div>
+            </section>
+            <section class="test-section">
+                <h2>6.Accessibility and Responsive Design.</h2>
+                <div class="test-item">
+                    <input type="checkbox" id="test-keyboard">
+                    <label for="test-keyboard">Navigate the website using the keyboard.
+                        <span class="test-note">Expected: interactive controls can used.</span>
+                    </label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="test-focus">
+                    <label for="test-focus">Use Tab key to inspect focus indicators and the skip link.
+                        <span class="test-note">Expected: keyboard focus is clearly visible.</span>
+                    </label>
+                </div>
+                <div class="test-item">
+                    <input type="checkbox" id="test-mobile">
+                    <label for="test-mobile">View the planner at desktop and mobile widths.
+                        <span class="test-note">Expected: the layout adapts without unnecessary horizontal scrolling.</span>
+                    </label>
+                </div>
+            </section>
+            <button id="reset-tests" type="button">Reset Checklist</button>
+        </main>
+        <footer>
+            <p>Campus Life Planner - Manual Testing Checklist</p>
+        </footer>
+        <script>
+            const checkboxes= document.querySelectorAll('.test-item input[type="checkbox"]');
+            const progress= document.getElementById('test-progress');
+            const reset_button= document.getElementById('reset-tests');
+            function update_Progress(){
+                const completed= document.querySelectorAll('.test-item input[type="checkbox"]:checked').length;
+                progress.textContent= `${completed} of ${checkboxes.length} tests completed.`;
+            }
+                checkboxes.forEach(function (checkbox){
+                    checkbox.addEventListener('change', update_Progress);
+                });
+                reset_button.addEventListener('click', function () {
+                    checkboxes.forEach(function (checkbox){
+                        checkbox.checked= false;
+                    });
+                    update_Progress();
+                });
+                update_Progress();
+        </script>
+    </body>
+</html>
