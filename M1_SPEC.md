@@ -27,13 +27,11 @@ Each record will contain the following fields:
 
 | Field | Type | Description |
 |---|---|---|
-| id | String | Unique identifier for the record |
-| title | String | Name or description of the activity |
-| dueDate | String | Date when the activity is due |
-| duration | Number | Amount of time required for the activity |
+| id | String | Unique identifier for the activity |
+| title | String | Name of the activity |
+| dueDate | String | Date when the activity is due, stored in `YYYY-MM-DD` format |
+| duration | Number | Amount of time required for the activity, measured in minutes |
 | tag | String | Category or label used to organize the activity |
-| createdAt | String | Date and time when the record was created |
-| updatedAt | String | Date and time when the record was last updated |
 
 ## 4. Main Application Sections
 
